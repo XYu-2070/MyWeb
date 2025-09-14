@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			body{
+				height: 100%;
+				background-color: rgb(137, 191, 112);
+				background-image: linear-gradient(rgba(34, 34, 34, 0.3)),url(./imges/background.jpg);
+			}
+			.main{
+				width: 100%;
+				height: 95vh;
+				border: 0px solid black;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+			.content_main{
+				position: relative;
+				width: 310px;
+				height: 480px;
+				border: 0px solid rgb(0, 85, 0);
+				border-radius: 10px;
+				background-size: 100% 100%;
+				overflow: hidden;
+				box-shadow: 4px 4px 3px 3px rgba(0, 67, 0, 0.5),
+						-2px -2px 3px 3px rgba(247, 255, 225,0.75);
+			}
+			.content_main>img{
+				position: absolute;
+				top: 0;
+				width: 310px;
+				height: 480px;
+				opacity: 0.95;
+				z-index: -1;
+				filter: brightness(85%);
+			}
+			.content{
+				width: 100%;
+				height: 100%;
+				border: 0px solid black;
+				display: flex;
+				justify-content: space-around;
+				flex-wrap: wrap;
+			}
+			.content>input{
+				width: 200px;
+				height: 20px;
+				border: 2px solid rgb(85, 170, 0);
+				border-radius: 5px;
+				background-color: rgba(247, 255, 225, 0.8);
+				margin-top: 5px;
+			}
+			.content>input:hover{
+				border: 2px solid rgb(63, 131, 52);
+				border-radius: 5px;
+				background-color: rgba(247, 255, 225, 0.8);
+			}
+			#add_1{
+				font-size: 28px;
+				width: 40px;
+				height: 24px;
+				margin-top: 5px;
+				border: 2px solid rgb(70, 140, 0);
+				background-color: rgba(111, 190, 0, 0.8);
+				color: rgb(170, 255, 0);
+				border-radius: 5px;
+				line-height: 24px;
+				transition: all 0.5s ease;
+			}
+			.remove_bott{
+				border: 2px solid rgb(70, 140, 0);
+				background-color: rgba(111, 190, 0, 0.8);
+				color: rgb(170, 255, 0);
+				border-radius: 5px;
+				margin-right: 0;
+				position: absolute;
+				right: 5px;
+				transition: all 0.5s ease;
+			}
+			.remove_bott:hover{
+				transform: scale(1.15);
+				box-shadow: 3px 3px 3px 3px rgba(39, 65, 0, 0.8);
+				cursor: pointer;
+			}
+			#uesr_list>li{
+				list-style: none;
+				margin-top: 8px;
+				position: relative;
+				color: rgb(247, 255, 225);
+			}
+			.sp{
+				color: rgb(247, 255, 225);
+				display: inline-block;
+				
+			}
+			.content>.list{
+				position: absolute;
+				width: 250px;
+				height: 400px;
+				border: 1px solid rgba(255, 255, 127,0.5);
+				border-radius: 5px;
+				margin-top: 38px;
+				margin-left: -6px;
+				overflow: auto;
+			}
+			#add_1:hover{
+				transform: scale(1.15);
+				box-shadow: 3px 3px 3px 3px rgba(39, 65, 0, 0.8);
+				cursor: pointer;
+			}
+			.main>h1{
+				user-select: none;
+				position: absolute;
+				color: rgb(247, 255, 225);
+				top: 3%;
+			}
+			#time{
+				user-select: none;
+				position: absolute;
+				color: rgb(247, 255, 225);
+				top: 90px;
+				background-color: rgba(41, 67, 26, 0.5);
+				border-radius: 8px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="main">
+			<h1>行动清单</h1>
+			<span id="time">&emsp;2025-8-5&emsp;夏&emsp;&emsp;12:00:00&emsp;</span>
+			<div class="content_main">
+				<div class="content">
+					<input type="text" id="uesr_input"/> <button id="add_1">+</button>
+					<div class="list">
+						<ul id="uesr_list">
+						</ul>
+					</div>
+				</div>
+				<img src="./MyWeb/imges/Summer.jpg" alt="出错啦" id="title_iamge"/>
+			</div>
+		</div>
+		
+		<script>
+			// ---------------------
+			let tutt_add = document.querySelector("#add_1")
+			let inp = document.querySelector("#uesr_input") 
+			
+			let all_li_text = [] //预保存 本地内存 和 html 的用户li文本
+			
+			function create(li_text = inp.value,i = all_li_text.length){
+				// 点击后  添加 li = <span1-序数 span2-文本  button-删除>
+				let ul = document.querySelector("#uesr_list")
+				let uesr_li = document.createElement("li")// 建立li 盒子
+				let sp_text = document.createElement("span")// 建立span 文本
+				sp_text.classList.add("sp")
+				sp_text.innerText = li_text
+				let sp_n = document.createElement("span")// 建立span 序数
+				sp_n.classList.add("sp")
+				sp_n.innerText = `${i + 1}.`
+				console.log(`添加点击1: li文本<${li_text}> class:${typeof li_text} 创建`)
+				
+				// 判断文本: 不为空 => 添加; 空 => 拒绝 
+				if (li_text != ''){
+					// 建立 删除按钮
+					let remove_butt = document.createElement("button")
+					remove_butt.classList.add("remove_bott")
+					remove_butt.innerText = "完成"
+					// -------------------------------------------
+					remove_butt.addEventListener("click",function(){
+						// 删除按钮 点击后 删除
+						console.log(`删除点击0: `)
+						// 删除按钮 点击后 删除
+						let goal_li = remove_butt.parentNode
+						let ul_list = goal_li.parentNode
+						console.log("删除点击1:",ul_list)
+						ul_list.removeChild(goal_li)// html删除
+						console.log("删除点击2: html删除成功",goal_li)
+						console.log("删除点击2-1:",all_li_text,"索引",i)
+						all_li_text.splice(i,1)
+						
+						console.log("删除点击2-2:",all_li_text,"索引",i)
+						// 重新排序 清除原有li数组
+						let end = all_li_text.length
+						let now_li_text = []
+						for (let n = 0;n < end;n++){
+							// 遍历当前的all_li_text
+							now_li_text.splice(n,0,all_li_text[n])
+						}
+						console.log(`删除点击3: 完成另存li数组[${now_li_text}]h:${now_li_text.length}`)
+						all_li_text = [] //清除所有li数组
+						ul_list.innerHTML = '' //清除html的所有li
+						localStorage.setItem("li_texts",JSON.stringify(now_li_text))
+						loading(now_li_text)
+					})
+					// ------------------------------------------
+					// 正式加入 html文件中
+					ul.appendChild(uesr_li)
+					uesr_li.appendChild(remove_butt)
+					uesr_li.appendChild(sp_n)
+					uesr_li.appendChild(sp_text)
+					console.log("添加点击2:创建成功",uesr_li)
+					// 存入 li_text数组
+					let end = all_li_text.length
+					all_li_text.splice(end,0,li_text)
+					console.log(`添加点击4: 在li数组[${all_li_text}]h:${all_li_text.length} 中存入<${li_text}>`)
+				}else{
+					console.log("添加点击3: 创建失败",li_text,"li文本为空")
+				}
+			}tutt_add.addEventListener("click",function(){
+				//添加点击  执行函数create 
+				create()
+				// 存入所有li文本 到 本地数据
+				localStorage.setItem("li_texts",JSON.stringify(all_li_text))
+				// 清除输入框内容
+				inp.value = ''
+			})
+			inp.addEventListener("keyup",function(pan){
+				if (pan.key == 'Enter'){
+					console.log(`输入响应1: 创建li`)
+					// 添加li  保存li文本到本地
+					create()
+					localStorage.setItem("li_texts",JSON.stringify(all_li_text))
+					inp.value = ''
+				}
+			})
+			
+			function loading(data_li = localStorage.getItem("li_texts")){
+				// 加载本地数据
+				if (data_li == null){
+					// 数据为空 什么都不做
+					console.log("加载数据1: 是第一次使用  数据为",data_li)
+					console.log("加载数据1: 加载数据停止")
+				}else{
+					// 数据不为 空
+					if (typeof data_li == 'string'){
+						// 是字符串  加载本地数据
+						let my_li = JSON.parse(data_li)
+						console.log("加载数据2: 开始加载数据-->",my_li," h:",my_li.length)
+						console.log("加载数据2: 当前li文本数组",all_li_text)
+						let end = my_li.length
+						for (let i = 0; i < end;i++){
+							// 遍历 my_li
+							console.log(`加载数据2-${i+1}: li文本<${my_li[i]}>  进入创建`)
+							create(my_li[i],i)
+						}
+					}else{
+						//不是  重新加载最新数据
+						console.log("加载数据2: 开始加载数据-->",data_li," h:",data_li.length)
+						console.log("加载数据2: 当前li文本数组",all_li_text)
+						let end = data_li.length
+						for (let i = 0; i < end;i++){
+						// 遍历 my_li
+						console.log(`加载数据2-${i+1}: li文本<${data_li[i]}>  进入创建`)
+						create(data_li[i],i)
+						}
+						
+					}
+					
+					
+				}
+			}loading()//加载本地数据
+			
+			
+			// ----------------------
+			// localStorage.clear()
+			// ----------------------
+			// 时间效果
+			
+			let time = document.querySelector("#time")
+			let image = document.querySelector("#title_iamge")
+			
+			function isMonth(month){
+				// 判断季节
+				if (month >= 3 && month <= 5) {
+					// console.log("这个月是春季")
+					image.src = "./MyWeb/imges/Spring.jpg"
+					return '春'
+				}
+				else if(month >= 6 && month <= 8) {
+					// console.log("这个月是夏季")
+					image.src = "./MyWeb/imges/Summer.jpg"
+					return '夏'
+				}
+				else if(month >= 9 && month <= 11) {
+					image.src = "./MyWeb/imges/Autumn.jpg"
+					// console.log("这个月是秋季")
+					return '秋'
+				}
+				else if(month <= 12 && month >= 1) {
+					image.src = "./MyWeb/imges/winter.jpg"
+					// console.log("这个月是冬季")
+					return '冬'
+				}
+			}
+			
+			setInterval(function(){
+				let now = new Date()
+				let season = isMonth(now.getMonth() + 1)
+				// let season = isMonth(1)
+				let minutes = String(now.getMinutes())
+				 if (minutes.length <2) {
+					minutes = `0${minutes}`
+					}
+				let time_text = `&emsp;${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}&emsp;${season}&emsp;&emsp;${now.getHours()}:${minutes}:${String(now.getSeconds()).padStart(2,'0')}&emsp;`
+				time.innerHTML = time_text
+				// console.log(time_text)
+			},1000)
+			
+			
+			
+			
+			
+			
+		</script>
+	</body>
+</html>
